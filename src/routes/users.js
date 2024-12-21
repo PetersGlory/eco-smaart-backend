@@ -61,4 +61,5 @@ router.get("/notifications", MobileAppAuthMiddleware, async (req, res)=>{
     }
 })
 
+
 module.exports = router;

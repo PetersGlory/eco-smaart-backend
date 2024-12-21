@@ -8,6 +8,7 @@ const authRoutes = require('./src/routes/auth');
 const userRouter = require('./src/routes/users');
 const disasterRouter = require('./src/routes/disaster');
 const transactionRoute = require('./src/routes/transactions');
+const generalRoutes = require('./src/routes/general');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use(bodyParser.json());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/disaster', disasterRouter);
+app.use('/api/v1/general', generalRoutes);
 app.use('/api/v1/transaction', transactionRoute);
 
 const PORT = process.env.PORT || 3000;
