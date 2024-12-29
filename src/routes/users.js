@@ -24,7 +24,7 @@ router.get("/profile", MobileAppAuthMiddleware, async (req, res) => {
 // Registration Endpoint
 router.post("/profile", MobileAppAuthMiddleware, async (req, res) => {
     const {email} = req.user;
-    const {fullname, businessname, phone, country, description} = req.body;
+    const {fullname, phone, country, city} = req.body;
     try {
         const existingUser = await User.findOne({where:{email}});
 
@@ -33,10 +33,11 @@ router.post("/profile", MobileAppAuthMiddleware, async (req, res) => {
         }
         
         await User.update({
-            firstname: firstname,
-            lastname: lastname,
-            username: username
-        });
+            fullname: fullname,
+            phone: phone,
+            country: country,
+            city: city,
+        }, {where: {email: email}});
         return res.status(200).json({ message: "User updated successfully", error: false });
     } catch (error) {
         console.log(error);

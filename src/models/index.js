@@ -9,7 +9,11 @@ const Transaction = require('./transaction')(sequelize, Sequelize.DataTypes);
 const Notification = require('./notification')(sequelize, Sequelize.DataTypes);
 const Issues = require('./issues')(sequelize, Sequelize.DataTypes);
 const Campaign = require('./campaign')(sequelize, Sequelize.DataTypes);
+const DTips = require('./disasterTips')(sequelize, Sequelize.DataTypes);
 const Tips = require('./tips')(sequelize, Sequelize.DataTypes);
+const ContactUs = require('./contact')(sequelize, Sequelize.DataTypes);
+const News = require('./news')(sequelize, Sequelize.DataTypes);
+
 
 module.exports = {
   sequelize,
@@ -19,5 +23,8 @@ module.exports = {
   Notification,
   Issues,
   Campaign,
-  Tips
+  Tips,
+  DTips,
+  ContactUs,
+  News
 };
