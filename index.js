@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require("cors");
 const { sequelize } = require('./src/models');
 const authRoutes = require('./src/routes/auth');
+const adminRoutes = require('./src/routes/admin');
 const userRouter = require('./src/routes/users');
 const disasterRouter = require('./src/routes/disaster');
 const transactionRoute = require('./src/routes/transactions');
@@ -36,6 +37,7 @@ app.use(express.static("public"));
 
 app.use(bodyParser.json());
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/disaster', disasterRouter);
 app.use('/api/v1/general', generalRoutes);
