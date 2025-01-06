@@ -2,8 +2,16 @@ const express = require("express");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
 const { User, Issues, Campaign } = require("../models");
 const uploadPics = require("../libs/uploadPics");
+const cloudinary = require("cloudinary").v2;
 
 const router = express.Router();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'dkmfdq27i', // replace with your Cloudinary cloud name
+  api_key: '577518219314857',       // replace with your Cloudinary API key
+  api_secret: 'G30bWsoZgl7zVkIhi1MmxtW1vF0'   // replace with your Cloudinary API secret
+});
 
 function generateFourDigitNumber() {
   return Math.floor(1000 + Math.random() * 9000);
@@ -26,12 +34,14 @@ router.post(
       if (!existingUser) {
         return res.status(422).send({ message: "User not found", error: true });
       }
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const imgUrl = result.secure_url; // Get the secure URL from the result
       await Issues.create({
         reference,
         type:issueType,
         reporter: existingUser.id,
         description,
-        img_url: "https://eco-smaart-backend.onrender.com/uploads/" + req.file.filename,
+        img_url: imgUrl || "https://eco-smaart-backend.onrender.com/uploads/" + req.file.filename,
       });
 
       return res.status(200).json({
@@ -56,15 +66,19 @@ router.post(
     const {email} = req.user;
     const { title, duration, goal, description } = req.body;
 
-    
     try {
-        const existingUser = await User.findOne({ where: { email } });
-        const reference = "eco-" + generateFourDigitNumber() + "-campaign";
-        console.log(reference)
+      const existingUser = await User.findOne({ where: { email } });
+      const reference = "eco-" + generateFourDigitNumber() + "-campaign";
+      console.log(reference);
 
       if (!existingUser) {
         return res.status(422).send({ message: "User not found", error: true });
       }
+
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const imgUrl = result.secure_url; // Get the secure URL from the result
+
       await Campaign.create({
         reference,
         title,
@@ -72,14 +86,14 @@ router.post(
         duration,
         user_id: existingUser.id,
         description,
-        img_url: "https://eco-smaart-backend.onrender.com/uploads/" + req.file.filename,
+        img_url: imgUrl, // Use the Cloudinary URL
       });
 
       return res.status(200).json({
-          message: "Campaign Submitted Successfully",
-          error: false,
-          success: true,
-        });
+        message: "Campaign Submitted Successfully",
+        error: false,
+        success: true,
+      });
     } catch (err) {
       console.error("err ", err);
       return res

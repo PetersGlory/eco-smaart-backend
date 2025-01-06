@@ -13,6 +13,7 @@ const DTips = require('./disasterTips')(sequelize, Sequelize.DataTypes);
 const Tips = require('./tips')(sequelize, Sequelize.DataTypes);
 const ContactUs = require('./contact')(sequelize, Sequelize.DataTypes);
 const News = require('./news')(sequelize, Sequelize.DataTypes);
+const Admin = require('./admin')(sequelize, Sequelize.DataTypes);
 
 
 module.exports = {
@@ -26,5 +27,6 @@ module.exports = {
   Tips,
   DTips,
   ContactUs,
-  News
+  News,
+  Admin
 };
