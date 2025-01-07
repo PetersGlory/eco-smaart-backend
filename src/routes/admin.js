@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { User, Otp, Admin } = require("../models");
+const { User, Otp, Admin, DTips, Tips } = require("../models");
 const tokenGenerate = require("../libs/generateToken");
 const sendOtp = require("../libs/sendOtp");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
@@ -55,6 +55,40 @@ router.get("/users", MobileAppAuthMiddleware, async (req, res) => {
       }
       const users = await User.findAll();
       return res.status(200).json({ message: "Users Fetched Successfully", error: false, data: users });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Error geting users", error: error.message });
+  }
+});
+
+// Fetching All disaster tips
+router.get("/all-disaster-tip", MobileAppAuthMiddleware, async (req, res) => {
+  const {email} = req.user;
+  try {
+      const existingUser = await Admin.findOne({where:{email}});
+
+      if(!existingUser){
+          return res.status(422).send({ message: "Profile not found", error: true });
+      }
+      const users = await DTips.findAll();
+      return res.status(200).json({ message: "Disaster Tips Successfully", error: false, data: users });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Error geting tips", error: error.message });
+  }
+});
+
+// Fetching All Environment tips
+router.get("/all-environmental-tip", MobileAppAuthMiddleware, async (req, res) => {
+  const {email} = req.user;
+  try {
+      const existingUser = await Admin.findOne({where:{email}});
+
+      if(!existingUser){
+          return res.status(422).send({ message: "Profile not found", error: true });
+      }
+      const users = await Tips.findAll();
+      return res.status(200).json({ message: "Environmental Tips Successfully", error: false, data: users });
   } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "Error geting tips", error: error.message });

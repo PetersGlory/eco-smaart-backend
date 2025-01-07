@@ -8,9 +8,9 @@ const router = express.Router();
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: 'dkmfdq27i', // replace with your Cloudinary cloud name
-  api_key: '577518219314857',       // replace with your Cloudinary API key
-  api_secret: 'G30bWsoZgl7zVkIhi1MmxtW1vF0'   // replace with your Cloudinary API secret
+  cloud_name: process.env.CLOUD_NAME, // replace with your Cloudinary cloud name
+  api_key: process.env.CLOUD_API_KEY,       // replace with your Cloudinary API key
+  api_secret: process.env.CLOUD_SECRET_KEY   // replace with your Cloudinary API secret
 });
 
 function generateFourDigitNumber() {
