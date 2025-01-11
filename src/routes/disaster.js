@@ -64,7 +64,7 @@ router.post(
   uploadPics.single("campaign_pics"),
   async (req, res) => {
     const {email} = req.user;
-    const { title, duration, goal, description } = req.body;
+    const { title, duration_start, duration_end, goal, description } = req.body;
 
     try {
       const existingUser = await User.findOne({ where: { email } });
@@ -83,7 +83,8 @@ router.post(
         reference,
         title,
         goal,
-        duration,
+        duration_start,
+        duration_end,
         user_id: existingUser.id,
         description,
         img_url: imgUrl, // Use the Cloudinary URL
