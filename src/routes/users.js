@@ -2,8 +2,10 @@ const express = require("express");
 const { User, Notification } = require("../models");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
 const { Sequelize } = require("sequelize");
-const uploadPics = require("../libs/uploadPics");
+const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+
+const uploader = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
@@ -49,7 +51,7 @@ router.post("/profile", MobileAppAuthMiddleware, async (req, res) => {
 
 // Uploading Profile Pics
 router.post("/profile-pics", MobileAppAuthMiddleware, 
-    uploadPics.single("image_pics"), async (req, res) => {
+    uploader.single("image_pics"), async (req, res) => {
     const {email} = req.user;
     try {
         const existingUser = await User.findOne({where:{email}});
@@ -58,7 +60,7 @@ router.post("/profile-pics", MobileAppAuthMiddleware,
             return res.status(422).send({ message: "Profile not found", error: true });
         }
 
-        const result = await cloudinary.uploader.upload(req.file.path);
+        const result = await cloudinary.uploader.upload_stream(req.file.buffer);
         const imgUrl = result.secure_url;
         
         await User.update({
