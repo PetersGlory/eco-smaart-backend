@@ -69,7 +69,7 @@ router.post("/profile-pics", MobileAppAuthMiddleware,
         return res.status(200).json({ message: "User profile picture updated successfully", error: false });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Error creating user", error: error.message });
+        return res.status(500).json({ message: "Error updating profile picture", error: error.message });
     }
 });
 
