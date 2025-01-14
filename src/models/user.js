@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       required: true,
       trim: true,
     },
+    profile_pics: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     city: {
       type: DataTypes.STRING,
       allowNull: false,

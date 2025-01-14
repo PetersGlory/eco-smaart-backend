@@ -1,6 +1,6 @@
 const express = require("express");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
-const { User, Issues, Campaign } = require("../models");
+const { User, Issues, Campaign, Admin, News } = require("../models");
 const uploadPics = require("../libs/uploadPics");
 const cloudinary = require("cloudinary").v2;
 
@@ -46,6 +46,44 @@ router.post(
 
       return res.status(200).json({
           message: "Report Submitted Successfully",
+          error: false,
+          success: true,
+        });
+    } catch (err) {
+      console.error("err ", err);
+      return res
+        .status(500)
+        .json({ message: "Error submitting", error: err.message });
+    }
+  }
+);
+
+router.post(
+  "/news",
+  MobileAppAuthMiddleware,
+  uploadPics.single("image_pics"),
+  async (req, res) => {
+    const {email} = req.user;
+    const { url_link, title, description } = req.body;
+
+    
+    try {
+      const existingUser = await Admin.findOne({where:{email}});
+
+      if(!existingUser){
+          return res.status(422).send({ message: "Profile not found", error: true });
+      }
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const imgUrl = result.secure_url; // Get the secure URL from the result
+      await News.create({
+        title,
+        url_link,
+        short_desc: description,
+        img_url: imgUrl || "https://eco-smaart-backend.onrender.com/uploads/" + req.file.filename,
+      });
+
+      return res.status(200).json({
+          message: "News Uploaded Successfully",
           error: false,
           success: true,
         });

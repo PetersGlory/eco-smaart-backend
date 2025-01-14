@@ -2,6 +2,7 @@ const express = require("express");
 const { User, Notification } = require("../models");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
 const { Sequelize } = require("sequelize");
+const uploadPics = require("../libs/uploadPics");
 
 const router = express.Router();
 
@@ -39,6 +40,30 @@ router.post("/profile", MobileAppAuthMiddleware, async (req, res) => {
             city: city,
         }, {where: {email: email}});
         return res.status(200).json({ message: "User updated successfully", error: false });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error creating user", error: error.message });
+    }
+});
+
+// Uploading Profile Pics
+router.post("/profile-pics", MobileAppAuthMiddleware, 
+    uploadPics.single("image_pics"), async (req, res) => {
+    const {email} = req.user;
+    try {
+        const existingUser = await User.findOne({where:{email}});
+
+        if(!existingUser){
+            return res.status(422).send({ message: "Profile not found", error: true });
+        }
+
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const imgUrl = result.secure_url;
+        
+        await User.update({
+            profile_pics: imgUrl,
+        }, {where: {email: email}});
+        return res.status(200).json({ message: "User profile picture updated successfully", error: false });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Error creating user", error: error.message });
