@@ -3,6 +3,7 @@ const { User, Notification } = require("../models");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
 const { Sequelize } = require("sequelize");
 const uploadPics = require("../libs/uploadPics");
+const cloudinary = require("cloudinary").v2;
 
 const router = express.Router();
 
