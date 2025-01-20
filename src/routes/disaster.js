@@ -59,7 +59,7 @@ router.post(
 );
 
 router.post(
-  "/news",
+  "/upload-news",
   MobileAppAuthMiddleware,
   uploadPics.single("image_pics"),
   async (req, res) => {
