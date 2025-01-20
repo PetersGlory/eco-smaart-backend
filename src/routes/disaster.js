@@ -77,7 +77,7 @@ router.post(
       const imgUrl = result.secure_url; // Get the secure URL from the result
       await News.create({
         title,
-        url_link,
+        url_link: url_link ? url_link : "https://eco-smaart-backend.onrender.com",
         short_desc: description,
         img_url: imgUrl || "https://eco-smaart-backend.onrender.com/uploads/" + req.file.filename,
       });
