@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     refer_by: { type: DataTypes.STRING, trim: true },
+    status: { type: DataTypes.STRING, allowNull:false, defaultValue: "active" },
     email: {
       type: DataTypes.STRING,
       unique: true,

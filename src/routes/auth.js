@@ -89,6 +89,9 @@ router.post("/login", async (req, res) => {
     if (!isValidPassword) {
       return res.status(422).json({ message: "Invalid password" });
     }
+    if (user == "banned") {
+      return res.status(422).json({ message: "User Banned" });
+    }
     const token = tokenGenerate({ email: email });
     const itpCode = generateFourDigitNumber();
 
