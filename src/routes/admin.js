@@ -276,6 +276,7 @@ router.get("/dashboard", MobileAppAuthMiddleware, async (req, res) => {
   }
 });
 
+// Uploading news
 router.post(
   "/upload-news",
   MobileAppAuthMiddleware,
@@ -313,6 +314,62 @@ router.post(
     }
   }
 );
+
+// Endpoint to add disaster tips
+router.post("/add-disaster-tip", MobileAppAuthMiddleware, async (req, res) => {
+  const { email } = req.user;
+  const { category, text } = req.body;
+
+  try {
+    const existingUser = await Admin.findOne({ where: { email } });
+
+    if (!existingUser) {
+      return res.status(422).send({ message: "Profile not found", error: true });
+    }
+
+    await DTips.create({
+      category,
+      text,
+      type: "disaster"
+    });
+
+    return res.status(200).json({
+      message: "Disaster Tip Added Successfully",
+      error: false,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error adding disaster tip", error: error.message });
+  }
+});
+
+// Endpoint to add environmental tips
+router.post("/add-environmental-tip", MobileAppAuthMiddleware, async (req, res) => {
+  const { email } = req.user;
+  const { category, text } = req.body;
+
+  try {
+    const existingUser = await Admin.findOne({ where: { email } });
+
+    if (!existingUser) {
+      return res.status(422).send({ message: "Profile not found", error: true });
+    }
+
+    await Tips.create({
+      category,
+      text,
+      type: "environmental"
+    });
+
+    return res.status(200).json({
+      message: "Environmental Tip Added Successfully",
+      error: false,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error adding environmental tip", error: error.message });
+  }
+});
 
 // Ban or Unban a user
 router.post("/user-status", MobileAppAuthMiddleware, async (req, res) => {
