@@ -9,6 +9,7 @@ const {
   Campaign,
   Issues,
   News,
+  Notification,
 } = require("../models");
 const tokenGenerate = require("../libs/generateToken");
 const MobileAppAuthMiddleware = require("../middleware/userMiddleware");
@@ -558,4 +559,83 @@ router.delete("/disaster-tip/:id", MobileAppAuthMiddleware, async (req, res) => 
   }
 });
 
+// Fetching All Notifications
+router.get("/notifications", MobileAppAuthMiddleware, async (req, res) => {
+  const { email } = req.user;
+  try {
+    const existingUser = await Admin.findOne({ where: { email } });
+
+    if (!existingUser) {
+      return res.status(422).send({ message: "Profile not found", error: true });
+    }
+
+    const notifications = await Notification.findAll();
+    return res.status(200).json({
+      message: "Notifications Loaded Successfully",
+      error: false,
+      data: notifications,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error getting notifications", error: error.message });
+  }
+});
+
+// Sending Notifications
+router.post("/send-notification", MobileAppAuthMiddleware, async (req, res) => {
+  const { email } = req.user;
+  const { title, contents } = req.body;
+
+  try {
+    const existingUser = await Admin.findOne({ where: { email } });
+
+    if (!existingUser) {
+      return res.status(422).send({ message: "Profile not found", error: true });
+    }
+
+    await Notification.create({
+      title,
+      contents,
+      for_email: "all",
+    });
+
+    return res.status(200).json({
+      message: "Notification Sent Successfully",
+      error: false,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error sending notification", error: error.message });
+  }
+});
+
+// Delete a notification
+router.delete("/notification/:id", MobileAppAuthMiddleware, async (req, res) => {
+  const { email } = req.user;
+  const { id } = req.params;
+
+  try {
+    const existingUser = await Admin.findOne({ where: { email } });
+
+    if (!existingUser) {
+      return res.status(422).send({ message: "Profile not found", error: true });
+    }
+
+    const tip = await Notification.findOne({ where: { id } });
+
+    if (!tip) {
+      return res.status(404).json({ message: "Notification not found", error: true });
+    }
+
+    await tip.destroy();
+
+    return res.status(200).json({
+      message: "Notification deleted successfully",
+      error: false,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error deleting Notification", error: error.message });
+  }
+});
 module.exports = router;
