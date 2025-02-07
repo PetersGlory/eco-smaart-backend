@@ -26,7 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         required: true
     },
-    duration:{
+    duration_date:{
+        type: DataTypes.STRING,
+        required: true
+    },
+    duration_end:{
         type: DataTypes.STRING,
         required: true
     },

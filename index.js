@@ -26,8 +26,7 @@ app.use(
 app.use(
   cors({
     origin: "*",
-    credentials: true,
-    preflightContinue: true,
+    credentials: false,
     optionsSuccessStatus: 200,
   })
 );

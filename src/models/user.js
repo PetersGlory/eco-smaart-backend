@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       required: true,
       trim: true,
     },
+    profile_pics: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -32,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     refer_by: { type: DataTypes.STRING, trim: true },
+    status: { type: DataTypes.STRING, allowNull:false, defaultValue: "active" },
     email: {
       type: DataTypes.STRING,
       unique: true,
